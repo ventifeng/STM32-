@@ -1,0 +1,63 @@
+
+
+//��Ƭ��ͷ�ļ�
+#include "stm32f10x.h"
+
+//Ӳ������
+#include "led.h"
+
+
+LED_INFO led_info = {0};
+
+
+/*
+************************************************************
+*	�������ƣ�	Led_Init
+*
+*	�������ܣ�	��������ʼ��
+*
+*	��ڲ�����	��
+*
+*	���ز�����	��
+*
+*	˵����		
+************************************************************
+*/
+void Led_Init(void)
+{
+
+	GPIO_InitTypeDef gpio_initstruct;
+	
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);		//��GPIOA��ʱ��
+	
+	gpio_initstruct.GPIO_Mode = GPIO_Mode_Out_PP;				//����Ϊ���
+	gpio_initstruct.GPIO_Pin = GPIO_Pin_4;						//����ʼ����Pin��
+	gpio_initstruct.GPIO_Speed = GPIO_Speed_50MHz;				//�ɳ��ص����Ƶ��
+	
+	GPIO_Init(GPIOA, &gpio_initstruct);							//��ʼ��GPIO
+	
+	Led_Set(LED_OFF);													//��ʼ����ɺ󣬹رշ�����
+
+}
+
+/*
+************************************************************
+*	�������ƣ�	Led_Set
+*
+*	�������ܣ�	����������
+*
+*	��ڲ�����	status�����ط�����
+*
+*	���ز�����	��
+*
+*	˵����		��-LED_ON		��-LED_OFF
+************************************************************
+*/
+void Led_Set(_Bool status)
+{
+	
+	GPIO_WriteBit(GPIOA, GPIO_Pin_4, status == LED_ON ? Bit_RESET : Bit_SET);		//���status����LED_ON���򷵻�Bit_SET�����򷵻�Bit_RESET
+	
+	led_info.Led_Status = status;
+
+}
